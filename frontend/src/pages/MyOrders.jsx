@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { AuthContext } from '../context/AuthContext';
 
 const MyOrders = () => {
@@ -18,7 +18,7 @@ const MyOrders = () => {
     const fetchOrders = async () => {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
-        const { data } = await axios.get('http://localhost:5000/api/orders/myorders', config);
+        const { data } = await api.get('/orders/myorders', config);
         setOrders(data);
       } catch (error) {
         console.error('Error fetching my orders', error);

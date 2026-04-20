@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 
@@ -41,7 +41,7 @@ const Checkout = () => {
         totalAmount: cartTotal
       };
 
-      await axios.post('http://localhost:5000/api/orders', orderData, config);
+      await api.post('/orders', orderData, config);
       clearCart();
       alert('Order placed successfully! We will contact you soon.');
       navigate('/');

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { AuthContext } from '../context/AuthContext';
 
 const Dashboard = () => {
@@ -22,8 +22,8 @@ const Dashboard = () => {
           headers: { Authorization: `Bearer ${token}` }
         };
         const [ordersRes, productsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/orders', config),
-          axios.get('http://localhost:5000/api/products') // Public route is fine, or use config
+          api.get('/orders', config),
+          api.get('/products') // Public route is fine, or use config
         ]);
         setOrders(ordersRes.data);
         setProducts(productsRes.data);
@@ -42,7 +42,7 @@ const Dashboard = () => {
       const config = {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
       };
-      const { data } = await axios.patch(`http://localhost:5000/api/orders/${orderId}/status`, { status: newStatus }, config);
+      const { data } = await api.patch(`/orders/${orderId}/status`, { status: newStatus }, config);
       setOrders(orders.map(order => order._id === orderId ? data : order));
     } catch (error) {
       console.error('Error updating status', error);
@@ -55,7 +55,7 @@ const Dashboard = () => {
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
       };
       const updateData = { [field]: Number(value) };
-      const { data } = await axios.patch(`http://localhost:5000/api/products/${productId}`, updateData, config);
+      const { data } = await api.patch(`/products/${productId}`, updateData, config);
       setProducts(products.map(p => p._id === productId ? data : p));
     } catch (error) {
       console.error('Error updating product', error);
@@ -67,7 +67,7 @@ const Dashboard = () => {
     if(!window.confirm('Are you sure you want to discard this product?')) return;
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:5000/api/products/${productId}`, config);
+      await api.delete(`/products/${productId}`, config);
       setProducts(products.filter(p => p._id !== productId));
     } catch (error) {
       console.error('Error deleting product', error);
